@@ -1,11 +1,12 @@
 const express = require('express');
 const Groq = require('groq-sdk');
 const app = express();
+const path = require('path');
 
 app.use(express.json());
 
-// Mengaktifkan folder saat ini agar file statis terbaca
-app.use(express.static(__dirname));
+// INI KUNCI UTAMANYA: Memberitahu Vercel di mana folder file statis berada
+app.use(express.static(path.join(__dirname)));
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -21,5 +22,4 @@ app.post('/api/generate', async (req, res) => {
     }
 });
 
-// Penting: Ekspor app agar Vercel bisa menjalankan backend
 module.exports = app;
