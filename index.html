@@ -4,16 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WALA AI - Storyboard Studio</title>
-    <!-- Path ./style.css memastikan file dibaca di folder yang sama -->
-    <link rel="stylesheet" href="./style.css">
+    <style>
+        /* CSS sekarang menyatu di sini, tidak perlu file style.css lagi */
+        body { font-family: Arial, sans-serif; background-color: #333; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: rgba(0,0,0,0.8); padding: 20px; border-radius: 10px; text-align: center; width: 90%; max-width: 500px; }
+        input { width: 80%; padding: 10px; margin-bottom: 10px; }
+        button { background: #ff4757; color: white; border: none; padding: 10px 20px; cursor: pointer; }
+    </style>
 </head>
 <body>
-
     <div class="container">
-        <h1>WALA AI - Storyboard Studio</h1>
-        <input type="text" id="topik" placeholder="Masukkan topik storyboard...">
-        <button id="generateBtn">Generate Storyboard</button>
-        <div id="result"></div>
+        <h1>WALA AI</h1>
+        <input type="text" id="topik" placeholder="Masukkan topik...">
+        <button id="generateBtn">Generate</button>
+        <div id="result" style="margin-top:20px;"></div>
     </div>
 
     <script>
@@ -21,8 +25,7 @@
             const topik = document.getElementById('topik').value;
             const resDiv = document.getElementById('result');
             if (!topik) return alert("Masukkan topik!");
-            
-            resDiv.innerText = "Sedang memproses...";
+            resDiv.innerText = "Memproses...";
             try {
                 const response = await fetch('/api/generate', {
                     method: 'POST',
@@ -31,9 +34,7 @@
                 });
                 const result = await response.json();
                 resDiv.innerText = result.data || result.message;
-            } catch (error) {
-                resDiv.innerText = "Gagal terhubung.";
-            }
+            } catch (error) { resDiv.innerText = "Gagal."; }
         };
     </script>
 </body>
