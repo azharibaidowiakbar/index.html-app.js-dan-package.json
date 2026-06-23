@@ -1,8 +1,0 @@
-{
-  "rewrites": [
-    { "source": "/style.css", "destination": "/style.css" },
-    { "source": "/background.jpg", "destination": "/background.jpg" },
-    { "source": "/api/:path*", "destination": "/index.js" },
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
-}
