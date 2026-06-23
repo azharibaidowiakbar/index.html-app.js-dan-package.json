@@ -2,124 +2,45 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WALA AI - Storyboard Studio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&display=swap');
-        
-        body { 
-            background-image: url('background.jpg'); 
-            background-size: cover; 
-            background-attachment: fixed; 
-            background-position: center; 
-            font-family: 'Outfit', sans-serif; 
-        }
-        
-        /* Container transparan */
-        .glass-container { 
-            background: rgba(0, 0, 0, 0.3); 
-            backdrop-filter: blur(15px); 
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        /* Input solid agar terbaca jelas */
-        .solid-input { 
-            background-color: rgba(255, 255, 255, 0.95) !important; 
-            color: #000000 !important; 
-            border: 2px solid #10b981 !important; 
-        }
-
-        /* Kotak hasil warna soft */
-        .soft-result { 
-            background-color: #fdfaf6 !important; 
-            color: #2d3436 !important; 
-            border: 2px solid #d1d5db !important; 
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="min-h-screen p-4 md:p-8 text-white">
-
-    <div class="max-w-7xl mx-auto glass-container p-8 rounded-[2rem] shadow-2xl">
-        <h1 class="text-3xl font-extrabold text-white text-center mb-8 uppercase tracking-widest drop-shadow-md">WALA AI STORYBOARD</h1>
-        
-        <div class="flex flex-col lg:flex-row gap-8">
-            <!-- PANEL KIRI: FORM -->
-            <div class="lg:w-1/2 space-y-4">
-                <div>
-                    <label class="text-white font-bold block mb-1 uppercase text-xs drop-shadow-md">Topik Cerita</label>
-                    <input id="topik" placeholder="Tulis petualangan di sini..." class="solid-input w-full p-3 rounded-xl outline-none font-bold">
-                </div>
-                
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-white font-bold block mb-1 uppercase text-xs drop-shadow-md">Jumlah Scene</label>
-                        <select id="scene" class="solid-input w-full p-3 rounded-xl font-bold">
-                            <!-- Loop otomatis 1-20 -->
-                            <script>for(let i=1; i<=20; i++) document.write(`<option>${i} Scene</option>`);</script>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-white font-bold block mb-1 uppercase text-xs drop-shadow-md">Durasi</label>
-                        <select id="durasi" class="solid-input w-full p-3 rounded-xl font-bold">
-                            <option>15 Detik</option><option>30 Detik</option><option>1 Menit</option>
-                            <option>3 Menit</option><option>5 Menit</option><option>10 Menit</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="text-white font-bold block mb-1 uppercase text-xs drop-shadow-md">Target Audiens</label>
-                    <select id="audiens" class="solid-input w-full p-3 rounded-xl font-bold">
-                        <option>Anak-anak</option><option>Remaja</option>
-                        <option>Mahasiswa/Dewasa Muda</option><option>Umum (Keluarga)</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="text-white font-bold block mb-1 uppercase text-xs drop-shadow-md">Gaya Visual</label>
-                    <select id="gaya" class="solid-input w-full p-3 rounded-xl font-bold">
-                        <option>Pixar-quality 3D Animation</option><option>Ghibli-style Anime</option>
-                        <option>Cinematic Realistic</option><option>Hand-drawn Sketch</option>
-                    </select>
-                </div>
-
-                <button id="btn" class="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-white font-extrabold rounded-xl text-lg uppercase transition shadow-lg border-2 border-emerald-300">
-                    Generate Storyboard
-                </button>
-            </div>
-
-            <!-- PANEL KANAN: HASIL -->
-            <div class="lg:w-1/2">
-                <label class="text-white font-bold block mb-1 uppercase text-xs drop-shadow-md">Hasil Storyboard</label>
-                <div id="hasil" class="soft-result w-full h-full p-6 rounded-2xl whitespace-pre-wrap min-h-[400px] overflow-y-auto font-medium shadow-inner">
-                    Hasil akan muncul di sini setelah Anda menekan tombol Generate...
-                </div>
-            </div>
-        </div>
+<body>
+    <div class="container">
+        <h1>WALA AI - Storyboard Studio</h1>
+        <input type="text" id="topik" placeholder="Masukkan topik storyboard...">
+        <button onclick="generateStoryboard()">Generate Storyboard</button>
+        <div id="result"></div>
     </div>
 
     <script>
-        document.getElementById('btn').onclick = async () => {
-            const hasil = document.getElementById('hasil');
-            hasil.innerText = "Sedang menyusun cerita ajaib...";
+        async function generateStoryboard() {
+            const resultDiv = document.getElementById('result');
+            const topik = document.getElementById('topik').value;
+            
+            resultDiv.innerText = "Sedang membuat storyboard...";
+
             try {
-                const response = await fetch('http://127.0.0.1:5000/api/generate', {
+                // JALUR RELATIF: Ini otomatis akan mengarah ke domain Vercel Anda
+                const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        topikUtama: document.getElementById('topik').value,
-                        jumlahScene: document.getElementById('scene').value,
-                        durasi: document.getElementById('durasi').value,
-                        targetAudiens: document.getElementById('audiens').value,
-                        gayaVisual: document.getElementById('gaya').value
-                    })
+                    body: JSON.stringify({ topikUtama: topik })
                 });
-                const data = await response.json();
-                hasil.innerText = data.success ? data.data : "Error: " + data.message;
-            } catch (error) { 
-                hasil.innerText = "Gagal terhubung ke server. Pastikan aplikasi Node.js sedang berjalan!"; 
+
+                const result = await response.json();
+                
+                if (result.data) {
+                    resultDiv.innerText = result.data;
+                } else {
+                    resultDiv.innerText = "Error: " + (result.message || "Gagal mendapatkan data");
+                }
+            } catch (error) {
+                resultDiv.innerText = "Gagal terhubung ke server. Pastikan API Key sudah benar.";
+                console.error("Error:", error);
             }
-        };
+        }
     </script>
 </body>
 </html>
