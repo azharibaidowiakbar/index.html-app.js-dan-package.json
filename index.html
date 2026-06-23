@@ -4,53 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WALA AI - Storyboard Studio</title>
-    
-    <link rel="stylesheet" href="/style.css">
+    <!-- Path ./style.css memastikan file dibaca di folder yang sama -->
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
     <div class="container">
         <h1>WALA AI - Storyboard Studio</h1>
         <input type="text" id="topik" placeholder="Masukkan topik storyboard...">
-        <button id="generateBtn" onclick="generateStoryboard()">Generate Storyboard</button>
+        <button id="generateBtn">Generate Storyboard</button>
         <div id="result"></div>
     </div>
 
     <script>
-        async function generateStoryboard() {
-            const resultDiv = document.getElementById('result');
+        document.getElementById('generateBtn').onclick = async () => {
             const topik = document.getElementById('topik').value;
-            const btn = document.getElementById('generateBtn');
-
-            if (!topik) {
-                alert("Silakan masukkan topik terlebih dahulu!");
-                return;
-            }
-
-            btn.disabled = true;
-            resultDiv.innerText = "Sedang memproses storyboard...";
-
+            const resDiv = document.getElementById('result');
+            if (!topik) return alert("Masukkan topik!");
+            
+            resDiv.innerText = "Sedang memproses...";
             try {
                 const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ topikUtama: topik })
                 });
-
                 const result = await response.json();
-                
-                if (result.success) {
-                    resultDiv.innerText = result.data;
-                } else {
-                    resultDiv.innerText = "Error: " + result.message;
-                }
+                resDiv.innerText = result.data || result.message;
             } catch (error) {
-                resultDiv.innerText = "Gagal terhubung ke server.";
-                console.error("Error:", error);
-            } finally {
-                btn.disabled = false;
+                resDiv.innerText = "Gagal terhubung.";
             }
-        }
+        };
     </script>
 </body>
 </html>
