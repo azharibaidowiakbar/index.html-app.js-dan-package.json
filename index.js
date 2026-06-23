@@ -8,8 +8,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// MENGATASI ERROR "Cannot GET /":
-// Membaca file index.html dan file pendukung (css/gambar) di folder yang sama
+// Perbaikan: Hanya sajikan file statis dari folder utama
 app.use(express.static(__dirname));
 
 // Routing untuk halaman utama
@@ -17,7 +16,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// API untuk WALA AI Storyboard
+// API untuk WALA AI
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 app.post('/api/generate', async (req, res) => {
@@ -27,7 +26,6 @@ app.post('/api/generate', async (req, res) => {
             messages: [{ role: "user", content: `Buat storyboard untuk: ${topikUtama}` }],
             model: "llama-3.3-70b-versatile",
         });
-
         res.json({ success: true, data: chatCompletion.choices[0].message.content });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
