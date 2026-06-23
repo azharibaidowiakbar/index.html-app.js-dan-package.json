@@ -1,12 +1,23 @@
 const express = require('express');
 const Groq = require('groq-sdk');
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
+
 app.use(express.json());
 app.use(cors());
 
-// Vercel akan membaca process.env.GROQ_API_KEY dari dashboard Anda
+// MENGATASI ERROR "Cannot GET /":
+// Membaca file index.html dan file pendukung (css/gambar) di folder yang sama
+app.use(express.static(__dirname));
+
+// Routing untuk halaman utama
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// API untuk WALA AI Storyboard
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 app.post('/api/generate', async (req, res) => {
