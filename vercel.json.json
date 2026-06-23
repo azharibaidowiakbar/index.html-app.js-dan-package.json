@@ -1,9 +1,4 @@
 {
-  "version": 2,
-  "builds": [
-    { "src": "api/app.js", "use": "@vercel/node" },
-    { "src": "public/index.html", "use": "@vercel/static" }
-  ],
   "rewrites": [
     { "source": "/api/generate", "destination": "/api/app.js" },
     { "source": "/(.*)", "destination": "/public/$1" }
