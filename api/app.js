@@ -5,13 +5,10 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
-app.use(express.static(__dirname));
+app.use(express.static('public')); // Pastikan file html ada di folder 'public'
 
-// JALUR KHUSUS: Mengatasi error 404 favicon.ico agar konsol tetap bersih
-app.get('/favicon.ico', (req, res) => res.status(204).end());
-
-// API Key Groq kamu
-const groq = new Groq({ apiKey: "" });
+// API Key diambil dari Environment Variable (Setting di Vercel)
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 app.post('/api/generate', async (req, res) => {
     try {
@@ -37,4 +34,6 @@ app.post('/api/generate', async (req, res) => {
     }
 });
 
-app.listen(5000, () => console.log('Server aktif di http://127.0.0.1:5000'));
+// PENTING: Jangan gunakan app.listen(5000)
+// Ekspor app agar Vercel bisa menjalankan servernya
+module.exports = app;

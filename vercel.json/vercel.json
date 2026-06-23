@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/api/generate", "destination": "/api/app.js" },
+    { "source": "/(.*)", "destination": "/public/$1" }
+  ]
+}
