@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WALA AI - Storyboard Studio</title>
-    <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+
     <div class="container">
         <h1>WALA AI - Storyboard Studio</h1>
         <input type="text" id="topik" placeholder="Masukkan topik storyboard...">
-        <button onclick="generateStoryboard()">Generate Storyboard</button>
+        <button id="generateBtn" onclick="generateStoryboard()">Generate Storyboard</button>
         <div id="result"></div>
     </div>
 
@@ -18,11 +20,17 @@
         async function generateStoryboard() {
             const resultDiv = document.getElementById('result');
             const topik = document.getElementById('topik').value;
-            
-            resultDiv.innerText = "Sedang membuat storyboard...";
+            const btn = document.getElementById('generateBtn');
+
+            if (!topik) {
+                alert("Silakan masukkan topik terlebih dahulu!");
+                return;
+            }
+
+            btn.disabled = true;
+            resultDiv.innerText = "Sedang memproses storyboard...";
 
             try {
-                // JALUR RELATIF: Ini otomatis akan mengarah ke domain Vercel Anda
                 const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -31,14 +39,16 @@
 
                 const result = await response.json();
                 
-                if (result.data) {
+                if (result.success) {
                     resultDiv.innerText = result.data;
                 } else {
-                    resultDiv.innerText = "Error: " + (result.message || "Gagal mendapatkan data");
+                    resultDiv.innerText = "Error: " + result.message;
                 }
             } catch (error) {
-                resultDiv.innerText = "Gagal terhubung ke server. Pastikan API Key sudah benar.";
+                resultDiv.innerText = "Gagal terhubung ke server.";
                 console.error("Error:", error);
+            } finally {
+                btn.disabled = false;
             }
         }
     </script>
